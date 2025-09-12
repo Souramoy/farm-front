@@ -1,0 +1,16 @@
+{
+    "theme_color":"#ffffff",
+    "background_color":"#ffffff",
+    "icons":[
+        {"purpose":"maskable","sizes":"512x512","src":"icon512_maskable.png","type":"image/png"},{"purpose":"any","sizes":"512x512","src":"icon512_rounded.png","type":"image/png"}
+    ],
+    "orientation":"portrait",
+    "display":"fullscreen",
+    "dir":"auto",
+    "lang":"en-US",
+    "name":"Spektr | Farm Management",
+    "short_name":"Spektr",
+    "description":"Spektr helps farmers predict risks, prevent diseases, and manage farms efficiently.",
+    "start_url":"/",
+    "scope":"/"
+}
