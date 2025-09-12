@@ -35,7 +35,7 @@ const Alerts: React.FC = () => {
 
   const loadAlerts = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/alerts");
+  const response = await axios.get("https://farm-back-production.up.railway.app/api/alerts");
       setAlerts(response.data);
     } catch (error) {
       console.error("Failed to load alerts:", error);
@@ -51,7 +51,7 @@ const Alerts: React.FC = () => {
 
   const markAsRead = async (alertId: number) => {
     try {
-      await axios.patch(`http://localhost:4000/api/alerts/${alertId}/read`);
+  await axios.patch(`https://farm-back-production.up.railway.app/api/alerts/${alertId}/read`);
       setAlerts(
         alerts.map((alert) =>
           alert.id === alertId ? { ...alert, read: true } : alert

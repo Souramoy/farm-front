@@ -38,7 +38,7 @@ const Training: React.FC = () => {
 
   const loadTrainingContent = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/training");
+  const response = await axios.get("https://farm-back-production.up.railway.app/api/training");
       setContent(response.data);
     } catch (error) {
       console.error("Failed to load training content:", error);

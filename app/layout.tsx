@@ -13,13 +13,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://farm-front-production.up.railway.app';
+
 export const metadata: Metadata = {
   title: "Farm Management",
   description:
     "A modern farm management system to track crops, livestock, expenses, and resources efficiently. Optimized for offline use with PWA support.",
   applicationName: "Farm Management",
   manifest: "/manifest.json",
-  metadataBase: new URL("http://localhost:3000"), // 👈 required for OG/Twitter
+  metadataBase: new URL(SITE_URL), // Uses env variable for flexibility
   appleWebApp: {
     capable: true,
     title: "Farm Management",
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
     title: "Farm Management",
     description:
       "Easily manage crops, livestock, and finances with our smart farm management web app.",
-    url: "https://your-domain.com",
+  url: SITE_URL,
     siteName: "Farm Management",
     images: [
       {

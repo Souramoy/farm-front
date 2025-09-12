@@ -40,8 +40,8 @@ const AdminPanel: React.FC = () => {
     try {
       // In a real app, we'd have admin-specific endpoints
       const [scansRes, complianceRes] = await Promise.all([
-        axios.get("http://localhost:4000/api/scans"),
-        axios.get("http://localhost:4000/api/compliance"),
+  axios.get("https://farm-back-production.up.railway.app/api/scans"),
+  axios.get("https://farm-back-production.up.railway.app/api/compliance"),
       ]);
 
       setStats({

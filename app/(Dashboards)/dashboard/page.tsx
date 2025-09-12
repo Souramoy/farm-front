@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
   const loadDashboardStats = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/dashboard/stats"
+        "https://farm-back-production.up.railway.app/api/dashboard/stats"
       );
       setStats(response.data);
     } catch (error) {

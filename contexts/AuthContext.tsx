@@ -50,7 +50,8 @@ interface RegisterData {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const API_BASE = 'http://localhost:4000/api';
+// Hard-coded production backend API base (user requested no env vars)
+const API_BASE = 'https://farm-back-production.up.railway.app/api';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

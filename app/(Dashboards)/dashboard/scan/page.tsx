@@ -14,11 +14,43 @@ import { useNotification } from "@/contexts/NotificationContext";
 import axios from "axios";
 import Navbar from "@/app/_components/Navbar";
 
+interface KeyIssue {
+  issue: string;
+}
+
+interface HealthAssessment {
+  status: string;
+  confidence: number;
+  observations: string;
+  key_issues: string[];
+}
+
+interface Recommendation {
+  treatable: boolean;
+  message?: string;
+  monitoring_advice?: string;
+  emergency?: boolean;
+  immediate_actions?: string[];
+  prevention?: string;
+  condition?: string;
+  medications?: string;
+  urgency?: string;
+  doctors?: string[];
+  home_care?: string;
+}
+
 interface ScanResult {
+  // Legacy fields
   result: string;
   confidence: number;
   scanId: number;
   message: string;
+  
+  // Enhanced fields from new AI model
+  animal_type?: string;
+  classification_confidence?: number;
+  health_assessment?: HealthAssessment;
+  recommendations?: Recommendation;
 }
 
 const Scan: React.FC = () => {
@@ -109,13 +141,10 @@ const Scan: React.FC = () => {
       formData.append("notes", notes);
 
       const response = await axios.post(
-        "http://localhost:4000/api/scan",
+        "https://farm-back-production.up.railway.app/api/scan",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+          // Let the browser/axios set the correct multipart boundary automatically
+          {}
       );
 
       setScanResult(response.data);
@@ -301,9 +330,22 @@ const Scan: React.FC = () => {
           >
             <div className="text-center">
               {getResultIcon(scanResult.result)}
-              <h3 className="text-2xl font-bold text-white mt-4 mb-2 capitalize">
+              
+              {/* Animal Type and Classification */}
+              {scanResult.animal_type && (
+                <div className="mb-2">
+                  <span className="px-3 py-1 text-xs font-medium bg-blue-500/30 text-blue-300 rounded-full">
+                    {scanResult.animal_type.charAt(0).toUpperCase() + scanResult.animal_type.slice(1)}
+                    {scanResult.classification_confidence && 
+                      ` (${Math.round(scanResult.classification_confidence * 100)}%)`}
+                  </span>
+                </div>
+              )}
+              
+              <h3 className="text-2xl font-bold text-white mt-2 mb-2 capitalize">
                 {scanResult.result}
               </h3>
+              
               <div className="flex items-center justify-center space-x-2 mb-4">
                 <span className="text-sm text-gray-300">Confidence:</span>
                 <div className="flex items-center">
@@ -319,38 +361,135 @@ const Scan: React.FC = () => {
                 </div>
               </div>
 
-              <p className="text-gray-300 mb-4">{scanResult.message}</p>
+              {/* Observations */}
+              <div className="mb-4">
+                <h4 className="font-semibold text-white mb-2">Observations:</h4>
+                <p className="text-gray-300">
+                  {scanResult.health_assessment?.observations || scanResult.message}
+                </p>
+              </div>
 
-              {/* Recommendations */}
+              {/* Key Issues */}
+              {scanResult.health_assessment?.key_issues && scanResult.health_assessment.key_issues.length > 0 && (
+                <div className="glass rounded-lg p-4 mb-4">
+                  <h4 className="font-semibold text-white mb-2">Detected Issues:</h4>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {scanResult.health_assessment.key_issues.map((issue, index) => (
+                      <span 
+                        key={index} 
+                        className="px-3 py-1 text-xs bg-red-500/30 text-red-300 rounded-full"
+                      >
+                        {issue}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Enhanced Recommendations */}
               <div className="glass rounded-lg p-4">
                 <h4 className="font-semibold text-white mb-2">
                   Recommendations:
                 </h4>
-                <div className="text-sm text-gray-300 space-y-2">
-                  {scanResult.result === "healthy" && (
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Continue regular monitoring</li>
-                      <li>Maintain current feeding schedule</li>
-                      <li>Schedule routine veterinary check-up</li>
-                    </ul>
-                  )}
-                  {scanResult.result === "treatable" && (
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Consult with veterinarian promptly</li>
-                      <li>Monitor for symptom changes</li>
-                      <li>Isolate if necessary</li>
-                      <li>Document treatment progress</li>
-                    </ul>
-                  )}
-                  {scanResult.result === "untreatable" && (
-                    <ul className="list-disc list-inside space-y-1 text-red-300">
-                      <li>Immediate veterinary attention required</li>
-                      <li>Consider humane options</li>
-                      <li>Prevent spread to other animals</li>
-                      <li>Contact animal health authorities</li>
-                    </ul>
-                  )}
-                </div>
+                
+                {/* Show different recommendations based on enhanced data when available */}
+                {scanResult.recommendations ? (
+                  <div className="text-sm text-gray-300 space-y-2">
+                    {/* Message if available */}
+                    {scanResult.recommendations.message && (
+                      <p className="font-medium text-white">
+                        {scanResult.recommendations.message}
+                      </p>
+                    )}
+                    
+                    {/* Treatment info */}
+                    {scanResult.recommendations.treatable && scanResult.recommendations.condition && (
+                      <div className="glass-light p-3 rounded-lg mb-3">
+                        <h5 className="font-medium text-yellow-200 mb-1">Treatment Information</h5>
+                        <p><span className="font-medium">Condition:</span> {scanResult.recommendations.condition}</p>
+                        {scanResult.recommendations.medications && (
+                          <p><span className="font-medium">Medication:</span> {scanResult.recommendations.medications}</p>
+                        )}
+                        {scanResult.recommendations.urgency && (
+                          <p>
+                            <span className="font-medium">Urgency:</span> 
+                            <span className={`ml-1 ${
+                              scanResult.recommendations.urgency === 'high' ? 'text-red-300' : 
+                              scanResult.recommendations.urgency === 'medium' ? 'text-yellow-300' : 'text-green-300'
+                            }`}>
+                              {scanResult.recommendations.urgency}
+                            </span>
+                          </p>
+                        )}
+                        {scanResult.recommendations.home_care && (
+                          <p><span className="font-medium">Home Care:</span> {scanResult.recommendations.home_care}</p>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Monitoring advice */}
+                    {scanResult.recommendations.monitoring_advice && (
+                      <div>
+                        <p className="font-medium text-green-300">Monitoring Advice:</p>
+                        <p>{scanResult.recommendations.monitoring_advice}</p>
+                      </div>
+                    )}
+                    
+                    {/* Emergency actions */}
+                    {scanResult.recommendations.emergency && scanResult.recommendations.immediate_actions && (
+                      <div className="bg-red-900/30 border border-red-700/50 p-3 rounded-lg">
+                        <h5 className="font-medium text-red-300 mb-1">⚠️ Immediate Actions Required</h5>
+                        <ul className="list-disc list-inside space-y-1 text-red-100">
+                          {scanResult.recommendations.immediate_actions.map((action, i) => (
+                            <li key={i}>{action}</li>
+                          ))}
+                        </ul>
+                        {scanResult.recommendations.prevention && (
+                          <p className="mt-2 text-red-200">{scanResult.recommendations.prevention}</p>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Professional help */}
+                    {scanResult.recommendations.doctors && scanResult.recommendations.doctors.length > 0 && (
+                      <div className="mt-3">
+                        <p className="font-medium">Contact:</p>
+                        <ul className="list-disc list-inside">
+                          {scanResult.recommendations.doctors.map((doctor, i) => (
+                            <li key={i}>{doctor}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Fallback to legacy recommendations */
+                  <div className="text-sm text-gray-300 space-y-2">
+                    {scanResult.result === "healthy" && (
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Continue regular monitoring</li>
+                        <li>Maintain current feeding schedule</li>
+                        <li>Schedule routine veterinary check-up</li>
+                      </ul>
+                    )}
+                    {scanResult.result === "treatable" && (
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Consult with veterinarian promptly</li>
+                        <li>Monitor for symptom changes</li>
+                        <li>Isolate if necessary</li>
+                        <li>Document treatment progress</li>
+                      </ul>
+                    )}
+                    {scanResult.result === "untreatable" && (
+                      <ul className="list-disc list-inside space-y-1 text-red-300">
+                        <li>Immediate veterinary attention required</li>
+                        <li>Consider humane options</li>
+                        <li>Prevent spread to other animals</li>
+                        <li>Contact animal health authorities</li>
+                      </ul>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

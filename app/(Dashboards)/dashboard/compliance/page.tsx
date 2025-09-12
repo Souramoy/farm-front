@@ -54,7 +54,7 @@ const Compliance: React.FC = () => {
 
   const loadCompliance = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/compliance");
+  const response = await axios.get("https://farm-back-production.up.railway.app/api/compliance");
       setRecords(response.data);
     } catch (error) {
       console.error("Failed to load compliance records:", error);
@@ -87,7 +87,7 @@ const Compliance: React.FC = () => {
       submitData.append("category", formData.category);
       if (selectedFile) submitData.append("document", selectedFile);
 
-      await axios.post("http://localhost:4000/api/compliance", submitData, {
+  await axios.post("https://farm-back-production.up.railway.app/api/compliance", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
