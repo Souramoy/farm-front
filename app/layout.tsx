@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://farm-front-production.up.railway.app';
+// Updated hard-coded frontend URL per request (no env override)
+const SITE_URL = 'https://farm-front-pink.vercel.app/';
 
 export const metadata: Metadata = {
   title: "Farm Management",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     "A modern farm management system to track crops, livestock, expenses, and resources efficiently. Optimized for offline use with PWA support.",
   applicationName: "Farm Management",
   manifest: "/manifest.json",
-  metadataBase: new URL(SITE_URL), // Uses env variable for flexibility
+  metadataBase: new URL(SITE_URL),
   appleWebApp: {
     capable: true,
     title: "Farm Management",
