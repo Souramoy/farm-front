@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useNotification } from "@/contexts/NotificationContext";
 import axios from "axios";
-import Navbar from "@/app/_components/Navbar";
 
 interface KeyIssue {
   issue: string;
@@ -201,7 +200,6 @@ const Scan: React.FC = () => {
 
   return (
     <div className="min-h-screen p-4 pb-20 bg-slate-950">
-      <Navbar />
       <div className="max-w-2xl mx-auto mt-20">
         {/* Header */}
         <div className="text-center mb-8">
