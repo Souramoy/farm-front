@@ -3,7 +3,6 @@ import { HeroPage } from "@/app/_components/Home";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import SWRegister from "./_components/SWResgister";
 
 export default function Home() {
   const { user } = useAuth();
@@ -24,7 +23,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white">
-      <SWRegister />
       {redirecting ? (
         <div className="flex flex-col items-center gap-4">
           <p className="text-lg md:text-xl font-medium">
