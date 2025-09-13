@@ -88,9 +88,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+
         <Providers>
           {children}
-          <ServiceWorkerRegistration />
           <footer className="text-center py-6 text-gray-400 bg-slate-950">
             © {new Date().getFullYear()} Spektr. All rights reserved.
           </footer>

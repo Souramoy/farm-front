@@ -4,6 +4,9 @@ import { MoveRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+// Update this to your actual veterinary support number (E.164 format recommended)
+const VET_SUPPORT_NUMBER = "+916294516326";
+
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
@@ -73,8 +76,13 @@ function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-row gap-3">
-            <Button size="lg" className="gap-4 text-black" variant="outline">
-              Call for veterinary support <PhoneCall className="w-4 h-4" />
+            <Button size="lg" className="gap-4 text-black" variant="outline" asChild>
+              <a
+                href={`tel:${VET_SUPPORT_NUMBER}`}
+                aria-label={`Call veterinary support at ${VET_SUPPORT_NUMBER}`}
+              >
+                Call for veterinary support <PhoneCall className="w-4 h-4" />
+              </a>
             </Button>
             <Link href="/login">
               <Button size="lg" className="gap-4">
