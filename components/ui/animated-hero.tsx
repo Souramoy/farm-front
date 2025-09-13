@@ -77,12 +77,12 @@ function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-row gap-3">
             <Button size="lg" className="gap-4 text-black cursor-pointer" variant="outline" asChild>
-              <a
+              <Link
                 href={`tel:${VET_SUPPORT_NUMBER}`}
                 aria-label={`Call veterinary support at ${VET_SUPPORT_NUMBER}`}
               >
                 Call for veterinary support <PhoneCall className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
             <Link href="/login">
               <Button size="lg" className="gap-4">
